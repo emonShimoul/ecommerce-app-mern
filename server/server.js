@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const userRoutes = require("./src/routes/userRoutes");
+const productRoutes = require("./src/routes/productRoutes");
 const connectDB = require("./src/config/db");
 const protect = require("./src/middleware/authMiddleware");
 
@@ -15,6 +16,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/api/users", userRoutes);
+app.use("/api/products", productRoutes);
 
 app.get("/api/protected", protect, (req, res) => {
   res.json({
