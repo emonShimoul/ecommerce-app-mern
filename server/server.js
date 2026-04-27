@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const userRoutes = require("./src/routes/userRoutes");
 const connectDB = require("./src/config/db");
+const protect = require("./src/middleware/authMiddleware");
 
 dotenv.config(); // 1. Load env first
 
@@ -15,6 +16,12 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/users", userRoutes);
 
+app.get("/api/protected", protect, (req, res) => {
+  res.json({
+    message: "You are logged in",
+    user: req.user,
+  });
+});
 
 // test route
 app.get("/", (req, res) => {
