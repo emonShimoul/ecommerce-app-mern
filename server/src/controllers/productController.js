@@ -1,19 +1,49 @@
 const Product = require("../models/Product");
+const cloudinary = require("../config/cloudinary");
+
 
 // create product (admin)
 exports.createProduct = async (req, res) => {
   try {
-    const { title, price, description, image, stock } = req.body;
+    const { title, price, description, stock } = req.body;
 
-    const product = await Product.create({
-      title,
-      price,
-      description,
-      image,
-      stock,
-    });
+    let imageUrl = "";
 
-    res.json(product);
+    if (req.file) {
+      const result = await cloudinary.uploader.upload_stream(
+        { folder: "products" },
+        async (error, result) => {
+          if (error) {
+              console.log(error);
+            return res.status(500).json({ message: "Upload failed" });
+          }
+
+          imageUrl = result.secure_url;
+
+          const product = await Product.create({
+            title,
+            price,
+            description,
+            image: imageUrl,
+            stock,
+          });
+
+          res.json(product);
+        }
+      );
+
+      result.end(req.file.buffer);
+    } else {
+      const product = await Product.create({
+        title,
+        price,
+        description,
+        image: "",
+        stock,
+      });
+
+      res.json(product);
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

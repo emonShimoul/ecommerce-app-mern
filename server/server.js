@@ -1,6 +1,9 @@
+require("dotenv").config(); // 1. Load env first
+
 const express = require("express");
-const dotenv = require("dotenv");
 const cors = require("cors");
+
+// const dotenv = require("dotenv");
 const userRoutes = require("./src/routes/userRoutes");
 const productRoutes = require("./src/routes/productRoutes");
 const connectDB = require("./src/config/db");
@@ -8,7 +11,6 @@ const protect = require("./src/middleware/authMiddleware");
 const cartRoutes = require("./src/routes/cartRoutes");
 const orderRoutes = require("./src/routes/orderRoutes");
 
-dotenv.config(); // 1. Load env first
 
 connectDB();
 
