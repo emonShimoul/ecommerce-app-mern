@@ -6,6 +6,7 @@ const productRoutes = require("./src/routes/productRoutes");
 const connectDB = require("./src/config/db");
 const protect = require("./src/middleware/authMiddleware");
 const cartRoutes = require("./src/routes/cartRoutes");
+const orderRoutes = require("./src/routes/orderRoutes");
 
 dotenv.config(); // 1. Load env first
 
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/orders", orderRoutes);
 
 app.get("/api/protected", protect, (req, res) => {
   res.json({
