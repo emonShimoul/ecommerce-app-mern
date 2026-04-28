@@ -20,6 +20,10 @@ exports.createProduct = async (req, res) => {
 
           imageUrl = result.secure_url;
 
+          if (!title || !price) {
+            return res.status(400).json({ message: "Missing fields" });
+          }
+
           const product = await Product.create({
             title,
             price,
