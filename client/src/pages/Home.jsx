@@ -20,7 +20,7 @@ const Home = () => {
 
   return (
     <div>
-      <h1>Products</h1>
+      <h1 className="text-4xl font-bold text-blue-600 text-center my-4">Products</h1>
 
       {products.map((p) => (
         <ProductCard key={p._id} product={p} />
