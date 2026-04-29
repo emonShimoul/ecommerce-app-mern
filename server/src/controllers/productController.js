@@ -1,5 +1,6 @@
 const Product = require("../models/Product");
 const uploadImage = require("../utils/uploadImage");
+const cloudinary = require("../config/cloudinary");
 const { successResponse, errorResponse } = require("../utils/response");
 
 // CREATE PRODUCT
@@ -25,7 +26,10 @@ exports.createProduct = async (req, res) => {
       price,
       description,
       stock,
-      image: result.secure_url,
+      image: {
+        url: result.secure_url,
+        public_id: result.public_id, // need to remove image from cloudinary when delete or update a product
+      },
     });
 
     // ✅ 4. Standard Response
@@ -80,15 +84,25 @@ exports.updateProduct = async (req, res) => {
     console.log("FILE:", req.file);
     const { title, price, description, stock } = req.body || {};
 
-    product.title = title || product.title;
-    product.price = price || product.price;
-    product.description = description || product.description;
-    product.stock = stock || product.stock;
+    if (title !== undefined) product.title = title;
+    if (price !== undefined) product.price = price;
+    if (description !== undefined) product.description = description;
+    if (stock !== undefined) product.stock = stock;
 
     // Optional image update
     if (req.file) {
+      // delete old image
+      if (product.image?.public_id) {
+        await cloudinary.uploader.destroy(product.image.public_id);
+      }
+
+      // upload new image
       const result = await uploadImage(req.file.buffer);
-      product.image = result.secure_url;
+
+      product.image = {
+        url: result.secure_url,
+        public_id: result.public_id,
+      };
     }
 
     const updatedProduct = await product.save();
@@ -108,6 +122,10 @@ exports.deleteProduct = async (req, res) => {
 
     if (!product) {
       return errorResponse(res, "Product not found", 404);
+    }
+
+    if (product.image?.public_id) {
+      await cloudinary.uploader.destroy(product.image.public_id);
     }
 
     await product.deleteOne();
