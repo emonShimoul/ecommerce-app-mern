@@ -1,122 +1,119 @@
 const Product = require("../models/Product");
-const cloudinary = require("../config/cloudinary");
+const uploadImage = require("../utils/uploadImage");
+const { successResponse, errorResponse } = require("../utils/response");
 
-
-// create product (admin)
+// CREATE PRODUCT
 exports.createProduct = async (req, res) => {
   try {
     const { title, price, description, stock } = req.body;
 
-    let imageUrl = "";
-
-    if (req.file) {
-      const result = await cloudinary.uploader.upload_stream(
-        { folder: "products" },
-        async (error, result) => {
-          if (error) {
-              console.log(error);
-            return res.status(500).json({ message: "Upload failed" });
-          }
-
-          imageUrl = result.secure_url;
-
-          if (!title || !price) {
-            return res.status(400).json({ message: "Missing fields" });
-          }
-
-          const product = await Product.create({
-            title,
-            price,
-            description,
-            image: imageUrl,
-            stock,
-          });
-
-          res.json(product);
-        }
-      );
-
-      result.end(req.file.buffer);
-    } else {
-      const product = await Product.create({
-        title,
-        price,
-        description,
-        image: "",
-        stock,
-      });
-
-      res.json(product);
+    // ✅ 1. Validation
+    if (!title || !price || !stock) {
+      return errorResponse(res, "Title, price and stock are required", 400);
     }
+
+    if (!req.file) {
+      return errorResponse(res, "Product image is required", 400);
+    }
+
+    // ✅ 2. Upload Image
+    const result = await uploadImage(req.file.buffer);
+
+    // ✅ 3. Create Product
+    const product = await Product.create({
+      title,
+      price,
+      description,
+      stock,
+      image: result.secure_url,
+    });
+
+    // ✅ 4. Standard Response
+    return successResponse(res, product, "Product created successfully");
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.log(error);
+    return errorResponse(res, "Failed to create product");
   }
 };
 
-// get all products
+
+
+// GET ALL PRODUCTS
 exports.getProducts = async (req, res) => {
   try {
     const products = await Product.find();
 
-    res.json(products);
+    return successResponse(res, products);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return errorResponse(res, error.message);
   }
 };
 
-// get single product
+
+
+// GET SINGLE PRODUCT
 exports.getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
 
     if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+      return errorResponse(res, "Product not found", 404);
     }
 
-    res.json(product);
+    return successResponse(res, product);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return errorResponse(res, error.message);
   }
 };
 
-// update product
+
+
+// UPDATE PRODUCT
 exports.updateProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
 
     if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+      return errorResponse(res, "Product not found", 404);
     }
-
-    const { title, price, description, image, stock } = req.body;
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
+    const { title, price, description, stock } = req.body || {};
 
     product.title = title || product.title;
     product.price = price || product.price;
     product.description = description || product.description;
-    product.image = image || product.image;
     product.stock = stock || product.stock;
 
-    const updated = await product.save();
+    // Optional image update
+    if (req.file) {
+      const result = await uploadImage(req.file.buffer);
+      product.image = result.secure_url;
+    }
 
-    res.json(updated);
+    const updatedProduct = await product.save();
+
+    return successResponse(res, updatedProduct, "Product updated");
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return errorResponse(res, error.message);
   }
 };
 
-// delete product
+
+
+// DELETE PRODUCT
 exports.deleteProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
 
     if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+      return errorResponse(res, "Product not found", 404);
     }
 
     await product.deleteOne();
 
-    res.json({ message: "Product deleted" });
+    return successResponse(res, null, "Product deleted");
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return errorResponse(res, error.message);
   }
 };

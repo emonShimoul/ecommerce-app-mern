@@ -16,7 +16,7 @@ const upload = require("../middleware/upload");
 router.post("/", protect, admin, upload.single("image"), createProduct);
 router.get("/", getProducts);
 router.get("/:id", getProductById);
-router.put("/:id", protect, admin, updateProduct);
+router.put("/:id", protect, admin, upload.single("image"), updateProduct);
 router.delete("/:id", protect, admin, deleteProduct);
 
 
