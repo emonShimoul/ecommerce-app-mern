@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
-import ProductCard from "../components/ProductCard";
+
+import Navbar from "../components/Navbar";
+// import Hero from "../components/Hero";
+// import ProductGrid from "../components/ProductGrid";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -9,7 +12,7 @@ const Home = () => {
     const fetchProducts = async () => {
       try {
         const res = await API.get("/products");
-        setProducts(res.data.data); // based on the response format
+        setProducts(res.data.data);
       } catch (err) {
         console.log(err);
       }
@@ -19,12 +22,10 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
-      <h1 className="text-4xl font-bold text-blue-600 text-center my-4">Products</h1>
-
-      {products.map((p) => (
-        <ProductCard key={p._id} product={p} />
-      ))}
+    <div className="bg-gray-50 min-h-screen">
+      <Navbar />
+      {/* <Hero /> */}
+      {/* <ProductGrid products={products} /> */}
     </div>
   );
 };
