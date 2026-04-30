@@ -1,24 +1,28 @@
+import { Link } from "react-router-dom";
+
 const ProductCard = ({ product }) => {
   return (
     <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden">
 
-      {/* Image */}
-      <img
-        src={product.image}
-        alt={product.title}
-        className="h-48 w-full object-cover"
-      />
+      {/* Clickable Image */}
+      <Link to={`/product/${product._id}`}>
+        <img
+          src={product.image}
+          alt={product.title}
+          className="h-48 w-full object-cover"
+        />
+      </Link>
 
-      {/* Content */}
       <div className="p-4">
-        <h3 className="font-semibold text-lg text-gray-800">
-          {product.title}
-        </h3>
 
-        <p className="text-gray-500 text-sm mt-1 line-clamp-2">
-          {product.description}
-        </p>
+        {/* Title */}
+        <Link to={`/product/${product._id}`}>
+          <h3 className="font-semibold text-lg text-gray-800 hover:text-blue-600">
+            {product.title}
+          </h3>
+        </Link>
 
+        {/* Price */}
         <div className="flex justify-between items-center mt-4">
           <span className="text-blue-600 font-bold text-lg">
             ${product.price}
@@ -28,8 +32,8 @@ const ProductCard = ({ product }) => {
             Add
           </button>
         </div>
-      </div>
 
+      </div>
     </div>
   );
 };

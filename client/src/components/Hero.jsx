@@ -21,7 +21,7 @@ const Hero = () => {
         {/* Image */}
         <div className="md:w-1/2 mt-10 md:mt-0">
           <img
-            src="https://illustrations.popsy.co/gray/ecommerce.svg"
+            src="https://images.unsplash.com/photo-1607082349566-187342175e2f?q=80&w=1200&auto=format&fit=crop"
             alt="hero"
             className="w-full"
           />
