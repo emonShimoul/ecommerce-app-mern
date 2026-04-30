@@ -40,12 +40,12 @@ const ProductDetails = () => {
       <div className="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-2 gap-10">
 
         {/* Image */}
-        <div>
-          <img
-            src={product.image}
-            alt={product.title}
-            className="w-full rounded-xl shadow-md"
-          />
+        <div className="flex justify-center items-center">
+            <img
+                src={product.image}
+                alt={product.title}
+                className="w-full max-w-md h-[400px] object-cover rounded-xl shadow"
+            />
         </div>
 
         {/* Details */}
