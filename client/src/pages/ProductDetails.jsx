@@ -58,6 +58,12 @@ const ProductDetails = () => {
             ${product.price}
           </p>
 
+          <p className={`mt-2 text-sm font-medium ${
+            product.stock > 0 ? "text-green-600" : "text-red-500"
+            }`}>
+            {product.stock > 0 ? "In Stock" : "Out of Stock"}
+          </p>
+
           <p className="text-gray-600 mt-6 leading-relaxed">
             {product.description}
           </p>
