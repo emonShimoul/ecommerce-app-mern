@@ -5,10 +5,11 @@ import Navbar from "../components/Navbar";
 
 const ProductDetails = () => {
   const { id } = useParams();
-
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [zoomStyle, setZoomStyle] = useState({});
+  const [isZooming, setIsZooming] = useState(false);
 
 
     useEffect(() => {
@@ -47,15 +48,44 @@ const ProductDetails = () => {
     <div className="bg-gray-50 min-h-screen">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-2 gap-10">
+      <div className="max-w-7xl mx-auto px-10 py-10 grid md:grid-cols-2 gap-8">
 
         <div>
             {/* Main Image */}
-            <img
-                src={selectedImage}
-                alt=""
-                className="w-full max-w-md h-[400px] object-cover rounded-xl"
-            />
+            <div
+                className="relative w-full max-w-md h-[400px] overflow-hidden rounded-xl"
+                onMouseMove={(e) => {
+                    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+
+                    const x = ((e.clientX - left) / width) * 100;
+                    const y = ((e.clientY - top) / height) * 100;
+
+                    setZoomStyle({
+                    backgroundPosition: `${x}% ${y}%`,
+                    });
+                }}
+                onMouseEnter={() => setIsZooming(true)}
+                onMouseLeave={() => setIsZooming(false)}
+                >
+                {/* Background zoom layer */}
+                <div
+                    className={`absolute inset-0 bg-no-repeat transition-opacity duration-200 ${
+                    isZooming ? "opacity-100" : "opacity-0"
+                    }`}
+                    style={{
+                    backgroundImage: `url(${selectedImage})`,
+                    backgroundSize: "200%", // zoom level
+                    ...zoomStyle,
+                    }}
+                />
+
+                {/* Normal image */}
+                <img
+                    src={selectedImage}
+                    alt=""
+                    className="w-full h-full object-cover"
+                />
+            </div>
 
             {/* Thumbnails (only if multiple images exist) */}
             {product.images?.length > 0 && (
