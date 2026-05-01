@@ -1,4 +1,5 @@
 
+import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useCart } from "../hooks/useCart";
 
@@ -24,7 +25,7 @@ const Cart = () => {
             {cartItems.map((item) => (
               <div
                 key={item._id}
-                className="flex items-center justify-between bg-white p-4 rounded mb-4 shadow"
+                className="flex items-center justify-between bg-white p-4 rounded shadow"
               >
                 <div className="flex items-center gap-4">
                   <img
@@ -58,9 +59,18 @@ const Cart = () => {
               </div>
             ))}
 
-            <h2 className="text-xl font-bold mt-6">
-              Total: ${total.toFixed(2)}
-            </h2>
+            <div className="flex justify-between">
+              <h2 className="text-xl font-bold mt-6">
+                Total: ${total.toFixed(2)}
+              </h2>
+
+              <Link
+                to="/checkout"
+                className="mt-6 inline-block bg-green-600 text-white px-6 py-2 rounded"
+              >
+                Proceed to Checkout
+              </Link>
+            </div>
           </>
         )}
       </div>
