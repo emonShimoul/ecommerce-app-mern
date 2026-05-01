@@ -1,5 +1,6 @@
-import { useCart } from "../context/CartContext";
+
 import Navbar from "../components/Navbar";
+import { useCart } from "../hooks/useCart";
 
 const Cart = () => {
   const { cartItems, removeFromCart, updateQty } = useCart();

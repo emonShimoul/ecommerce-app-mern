@@ -1,8 +1,7 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 
-const CartContext = createContext();
-
-export const useCart = () => useContext(CartContext);
+// eslint-disable-next-line react-refresh/only-export-components
+export const CartContext = createContext();
 
 const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(() => {
@@ -10,12 +9,10 @@ const CartProvider = ({ children }) => {
     return stored ? JSON.parse(stored) : [];
   });
 
-  // Save to localStorage
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // ADD TO CART
   const addToCart = (product, qty = 1) => {
     setCartItems((prev) => {
       const exist = prev.find((item) => item._id === product._id);
@@ -47,9 +44,7 @@ const CartProvider = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider
-      value={{ cartItems, addToCart, removeFromCart, updateQty }}
-    >
+    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQty }}>
       {children}
     </CartContext.Provider>
   );

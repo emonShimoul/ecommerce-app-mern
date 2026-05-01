@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import API from "../services/api";
 import Navbar from "../components/Navbar";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../hooks/useCart";
 
 const ProductDetails = () => {
     const { id } = useParams();
