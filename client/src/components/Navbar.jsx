@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 const navLinkClass = ({ isActive }) =>
   isActive
@@ -8,6 +9,7 @@ const navLinkClass = ({ isActive }) =>
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { cartItems } = useCart();
 
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
@@ -35,12 +37,14 @@ const Navbar = () => {
             Login
           </Link>
 
-          <Link
-            to="/cart"
-            className="px-4 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
-          >
+          <Link to="/cart" className="relative px-4 py-1 bg-blue-600 text-white rounded-md">
             Cart
-          </Link>
+            {cartItems.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-xs px-2 rounded-full">
+                {cartItems.length}
+              </span>
+            )}
+        </Link>
         </div>
 
         {/* Mobile Button */}
