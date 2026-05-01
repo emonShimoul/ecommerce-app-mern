@@ -8,39 +8,40 @@ exports.createProduct = async (req, res) => {
   try {
     const { title, price, description, stock } = req.body;
 
-    // ✅ 1. Validation
     if (!title || !price || !stock) {
-      return errorResponse(res, "Title, price and stock are required", 400);
+      return errorResponse(res, "Required fields missing", 400);
     }
 
-    if (!req.file) {
-      return errorResponse(res, "Product image is required", 400);
+    if (!req.files || req.files.length === 0) {
+      return errorResponse(res, "At least one image required", 400);
     }
 
-    // ✅ 2. Upload Image
-    const result = await uploadImage(req.file.buffer);
+    // Upload multiple images
+    const uploadedImages = [];
 
-    // ✅ 3. Create Product
+    for (let file of req.files) {
+      const result = await uploadImage(file.buffer);
+
+      uploadedImages.push({
+        url: result.secure_url,
+        public_id: result.public_id,   // need to remove image from cloudinary when delete or update a product
+      });
+    }
+
     const product = await Product.create({
       title,
       price,
       description,
       stock,
-      image: {
-        url: result.secure_url,
-        public_id: result.public_id, // need to remove image from cloudinary when delete or update a product
-      },
+      images: uploadedImages,
     });
 
-    // ✅ 4. Standard Response
-    return successResponse(res, product, "Product created successfully");
+    return successResponse(res, product, "Product created");
   } catch (error) {
     console.log(error);
     return errorResponse(res, "Failed to create product");
   }
 };
-
-
 
 // GET ALL PRODUCTS
 exports.getProducts = async (req, res) => {
@@ -52,8 +53,6 @@ exports.getProducts = async (req, res) => {
     return errorResponse(res, error.message);
   }
 };
-
-
 
 // GET SINGLE PRODUCT
 exports.getProductById = async (req, res) => {
@@ -69,8 +68,6 @@ exports.getProductById = async (req, res) => {
     return errorResponse(res, error.message);
   }
 };
-
-
 
 // UPDATE PRODUCT
 exports.updateProduct = async (req, res) => {
@@ -88,21 +85,29 @@ exports.updateProduct = async (req, res) => {
     if (price !== undefined) product.price = price;
     if (description !== undefined) product.description = description;
     if (stock !== undefined) product.stock = stock;
+    
+    // 🔥 If new images uploaded
+    if (req.files && req.files.length > 0) {
+      const cloudinary = require("../config/cloudinary");
 
-    // Optional image update
-    if (req.file) {
-      // delete old image
-      if (product.image?.public_id) {
-        await cloudinary.uploader.destroy(product.image.public_id);
+      // ❗ Delete old images
+      for (let img of product.images) {
+        await cloudinary.uploader.destroy(img.public_id);
       }
 
-      // upload new image
-      const result = await uploadImage(req.file.buffer);
+      // Upload new images
+      const newImages = [];
 
-      product.image = {
-        url: result.secure_url,
-        public_id: result.public_id,
-      };
+      for (let file of req.files) {
+        const result = await uploadImage(file.buffer);
+
+        newImages.push({
+          url: result.secure_url,
+          public_id: result.public_id,
+        });
+      }
+
+      product.images = newImages;
     }
 
     const updatedProduct = await product.save();
@@ -113,8 +118,6 @@ exports.updateProduct = async (req, res) => {
   }
 };
 
-
-
 // DELETE PRODUCT
 exports.deleteProduct = async (req, res) => {
   try {
@@ -124,8 +127,9 @@ exports.deleteProduct = async (req, res) => {
       return errorResponse(res, "Product not found", 404);
     }
 
-    if (product.image?.public_id) {
-      await cloudinary.uploader.destroy(product.image.public_id);
+    // 🔥 Delete all images
+    for (let img of product.images) {
+      await cloudinary.uploader.destroy(img.public_id);
     }
 
     await product.deleteOne();

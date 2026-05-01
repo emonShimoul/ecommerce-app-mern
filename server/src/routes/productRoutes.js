@@ -13,10 +13,10 @@ const admin = require("../middleware/adminMiddleware");
 const upload = require("../middleware/upload");
 
 // router.post("/", protect, admin, createProduct);
-router.post("/", protect, admin, upload.single("image"), createProduct);
+router.post("/", protect, admin, upload.array("images", 5), createProduct);
 router.get("/", getProducts);
 router.get("/:id", getProductById);
-router.put("/:id", protect, admin, upload.single("image"), updateProduct);
+router.put("/:id", protect, admin, upload.array("images", 5), updateProduct);
 router.delete("/:id", protect, admin, deleteProduct);
 
 
