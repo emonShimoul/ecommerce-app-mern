@@ -1,13 +1,15 @@
 import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
+  console.log(product);
+  
   return (
     <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition overflow-hidden">
 
       {/* Clickable Image */}
       <Link to={`/product/${product._id}`}>
         <img
-          src={product.image}
+          src={product?.images[0]?.url}
           alt={product.title}
           className="h-48 w-full object-cover"
         />

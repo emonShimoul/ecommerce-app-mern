@@ -8,28 +8,38 @@ const ProductDetails = () => {
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const res = await API.get(`/products/${id}`);
-        setProduct(res.data.data);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchProduct();
-  }, [id]);
+    useEffect(() => {
+        const fetchProduct = async () => {
+        try {
+            const res = await API.get(`/products/${id}`);
+            setProduct(res.data.data);
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoading(false);
+        }
+        };
 
-  if (loading)
-  return (
+        fetchProduct();
+    }, [id]);
+
+    useEffect(() => {
+        if (product?.images?.length) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setSelectedImage(product.images[0].url);
+        }
+    }, [product]);
+    
+
+    if (loading)
+    return (
     <div className="p-10 text-center text-gray-500 animate-pulse">
-      Loading product...
+        Loading product...
     </div>
-  );
+    );
 
   if (!product) return <p className="p-6">Product not found</p>;
 
@@ -39,13 +49,32 @@ const ProductDetails = () => {
 
       <div className="max-w-7xl mx-auto px-4 py-10 grid md:grid-cols-2 gap-10">
 
-        {/* Image */}
-        <div className="flex justify-center items-center">
+        <div>
+            {/* Main Image */}
             <img
-                src={product.image}
-                alt={product.title}
-                className="w-full max-w-md h-[400px] object-cover rounded-xl shadow"
+                src={selectedImage}
+                alt=""
+                className="w-full max-w-md h-[400px] object-cover rounded-xl"
             />
+
+            {/* Thumbnails (only if multiple images exist) */}
+            {product.images?.length > 0 && (
+                <div className="flex gap-3 mt-4">
+                    {product.images.map((img, i) => (
+                        <img
+                        key={i}
+                        src={img.url}
+                        alt=""
+                        onClick={() => setSelectedImage(img.url)}
+                        className={`w-20 h-20 object-cover rounded cursor-pointer border-2 ${
+                            selectedImage === img.url
+                            ? "border-blue-600"
+                            : "border-transparent"
+                        }`}
+                        />
+                    ))}
+                </div>
+            )}
         </div>
 
         {/* Details */}
