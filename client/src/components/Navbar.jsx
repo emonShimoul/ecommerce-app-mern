@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
+import { useAuth } from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const navLinkClass = ({ isActive }) =>
   isActive
@@ -10,6 +12,13 @@ const navLinkClass = ({ isActive }) =>
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { cartItems } = useCart();
+  const { token, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
@@ -30,21 +39,38 @@ const Navbar = () => {
 
         {/* Right Side */}
         <div className="hidden md:flex items-center gap-3">
-          <Link
-            to="/login"
-            className="px-4 py-1 border rounded-md hover:bg-gray-100 transition"
+          {token ? (
+          <button
+            onClick={handleLogout}
+            className="px-4 py-1 border rounded-md hover:bg-gray-100"
           >
-            Login
-          </Link>
+            Logout
+          </button>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="px-4 py-1 border rounded-md hover:bg-gray-100"
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="px-4 py-1 border rounded-md hover:bg-gray-100"
+              >
+                Register
+              </Link>
+            </>
+          )}
 
           <Link to="/cart" className="relative px-4 py-1 bg-blue-600 text-white rounded-md">
             Cart
-            {cartItems.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-xs px-2 rounded-full">
-                {cartItems.length}
-              </span>
-            )}
-        </Link>
+              {cartItems.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-xs px-2 rounded-full">
+                  {cartItems.length}
+                </span>
+              )}
+          </Link>
         </div>
 
         {/* Mobile Button */}
@@ -65,12 +91,20 @@ const Navbar = () => {
           <NavLink to="/contact" className={navLinkClass}>Contact</NavLink>
 
           <div className="flex flex-col gap-2 pt-2">
-            <Link
-              to="/login"
-              className="px-4 py-1 border rounded-md text-center"
-            >
-              Login
-            </Link>
+            {token ? (
+              <button onClick={handleLogout} className="px-4 py-1 border rounded-md">
+                Logout
+              </button>
+            ) : (
+              <>
+                <Link to="/login" className="px-4 py-1 border rounded-md text-center">
+                  Login
+                </Link>
+                <Link to="/register" className="px-4 py-1 border rounded-md text-center">
+                  Register
+                </Link>
+              </>
+            )}
 
             <Link
               to="/cart"
