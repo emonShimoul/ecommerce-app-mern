@@ -1,11 +1,12 @@
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const PrivateRoute = ({ children }) => {
-  const token = localStorage.getItem("token");
+  const { token, loading } = useAuth();
 
-  if (!token) {
-    return <Navigate to="/login" />;
-  }
+  if (loading) return <p className="text-center mt-10">Loading...</p>;
+
+  if (!token) return <Navigate to="/login" />;
 
   return children;
 };

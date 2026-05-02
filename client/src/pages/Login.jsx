@@ -1,67 +1,63 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import API from "../services/api";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
+  const [form, setForm] = useState({ email: "", password: "" });
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
-  const handleLogin = async () => {
-    if (!form.email || !form.password) {
-      alert("Fill all fields");
-      return;
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     try {
-      const res = await API.post("/auth/login", form);
-
-      // ✅ SAVE TOKEN HERE
-      localStorage.setItem("token", res.data.token);
-
-      alert("Login successful");
-
-      navigate("/"); // redirect home
-    } catch (err) {
+      await login(form);
+      navigate("/");
+    } catch {
       alert("Invalid credentials");
-      console.log(err);
-      
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded shadow w-80">
-        <h2 className="text-xl font-bold mb-4">Login</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-50 to-indigo-100">
+      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
 
-        <input
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-          className="w-full mb-3 border p-2 rounded"
-        />
+        <h2 className="text-2xl font-bold text-center mb-6">
+          Welcome Back 👋
+        </h2>
 
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          onChange={handleChange}
-          className="w-full mb-3 border p-2 rounded"
-        />
+        <form onSubmit={handleSubmit}>
+          <input
+            name="email"
+            placeholder="Email"
+            onChange={handleChange}
+            className="w-full mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
 
-        <button
-          onClick={handleLogin}
-          className="w-full bg-blue-600 text-white py-2 rounded"
-        >
-          Login
-        </button>
+          <input
+            name="password"
+            type="password"
+            placeholder="Password"
+            onChange={handleChange}
+            className="w-full mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <button className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition">
+            Login
+          </button>
+        </form>
+
+        <p className="text-sm text-center mt-4">
+          Don’t have an account?{" "}
+          <Link to="/register" className="text-blue-600 font-medium">
+            Register
+          </Link>
+        </p>
+
       </div>
     </div>
   );

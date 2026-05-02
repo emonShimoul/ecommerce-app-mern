@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import API from "../services/api";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const Register = () => {
   const navigate = useNavigate();
+  const { register } = useAuth();
 
   const [form, setForm] = useState({
     name: "",
@@ -11,60 +12,63 @@ const Register = () => {
     password: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
-  const handleRegister = async () => {
-    if (!form.name || !form.email || !form.password) {
-      alert("Fill all fields");
-      return;
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     try {
-      await API.post("/auth/register", form);
-
-      alert("Registered successfully");
-
+      await register(form);
       navigate("/login");
-    } catch (err) {
+    } catch {
       alert("Registration failed");
     }
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded shadow w-80">
-        <h2 className="text-xl font-bold mb-4">Register</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-green-50 to-emerald-100">
+      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
 
-        <input
-          name="name"
-          placeholder="Name"
-          onChange={handleChange}
-          className="w-full mb-3 border p-2 rounded"
-        />
+        <h2 className="text-2xl font-bold text-center mb-6">
+          Create Account 🚀
+        </h2>
 
-        <input
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-          className="w-full mb-3 border p-2 rounded"
-        />
+        <form onSubmit={handleSubmit}>
+          <input
+            name="name"
+            placeholder="Full Name"
+            onChange={handleChange}
+            className="w-full mb-4 p-3 border rounded-lg focus:ring-2 focus:ring-green-500"
+          />
 
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          onChange={handleChange}
-          className="w-full mb-3 border p-2 rounded"
-        />
+          <input
+            name="email"
+            placeholder="Email"
+            onChange={handleChange}
+            className="w-full mb-4 p-3 border rounded-lg focus:ring-2 focus:ring-green-500"
+          />
 
-        <button
-          onClick={handleRegister}
-          className="w-full bg-green-600 text-white py-2 rounded"
-        >
-          Register
-        </button>
+          <input
+            name="password"
+            type="password"
+            placeholder="Password"
+            onChange={handleChange}
+            className="w-full mb-4 p-3 border rounded-lg focus:ring-2 focus:ring-green-500"
+          />
+
+          <button className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition">
+            Register
+          </button>
+        </form>
+
+        <p className="text-sm text-center mt-4">
+          Already have an account?{" "}
+          <Link to="/login" className="text-green-600 font-medium">
+            Login
+          </Link>
+        </p>
+
       </div>
     </div>
   );
