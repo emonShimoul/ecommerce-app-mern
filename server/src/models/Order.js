@@ -16,6 +16,11 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     totalPrice: Number,
+    shippingInfo: {
+      name: String,
+      address: String,
+      phone: String,
+    },
   },
   { timestamps: true }
 );

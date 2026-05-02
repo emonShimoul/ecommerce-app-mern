@@ -2,17 +2,17 @@ import { useState } from "react";
 import Navbar from "../components/Navbar";
 import { useCart } from "../hooks/useCart";
 import API from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
-  const { cartItems } = useCart();
-
+  const { cartItems, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     name: "",
     address: "",
     phone: "",
   });
-
   const total = cartItems.reduce(
     (acc, item) => acc + item.price * item.qty,
     0
@@ -44,9 +44,9 @@ const Checkout = () => {
 
       alert("Order placed successfully!");
 
-      // optional: clear cart (we’ll improve this next)
-      localStorage.removeItem("cart");
-      window.location.href = "/";
+      // clear cart
+      clearCart();
+      navigate("/");
 
     } catch (err) {
       console.log(err);

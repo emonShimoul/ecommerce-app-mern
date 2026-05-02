@@ -3,33 +3,23 @@ const User = require("../models/User");
 
 exports.createOrder = async (req, res) => {
   try {
-    const user = await User.findById(req.user?._id).populate("cart.productId");
+    const { products, totalPrice, shippingInfo } = req.body;
 
-    if (!user.cart.length) {
-      return res.status(400).json({ message: "Cart is empty" });
+    if (!products || products.length === 0) {
+      return res.status(400).json({ message: "No products in order" });
     }
 
-    // create order items
-    const orderItems = user.cart.map((item) => ({
-      product: item.productId._id,
-      quantity: item.quantity,
+    const orderItems = products.map((item) => ({
+      product: item.productId,
+      quantity: item.qty,
     }));
-
-    // calculate total price
-    const totalPrice = user.cart.reduce(
-      (acc, item) => acc + item.productId.price * item.quantity,
-      0
-    );
 
     const order = await Order.create({
       user: req.user._id,
       orderItems,
       totalPrice,
+      shippingInfo, // optional (add to model if needed)
     });
-
-    // clear cart after order
-    user.cart = [];
-    await user.save();
 
     res.json(order);
   } catch (error) {
