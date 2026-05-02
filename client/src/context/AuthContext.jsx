@@ -8,27 +8,6 @@ const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [loading, setLoading] = useState(true);
 
-  // Load user on app start
-  useEffect(() => {
-    const loadUser = async () => {
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const res = await API.get("/users/me");
-        setUser(res.data);
-      } catch (err) {
-        logout();
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadUser();
-  }, [token]);
-
   // LOGIN
   const login = async (form) => {
     const res = await API.post("/users/login", form);
@@ -50,6 +29,28 @@ const AuthProvider = ({ children }) => {
     setToken(null);
     setUser(null);
   };
+
+  // Load user on app start
+  useEffect(() => {
+    const loadUser = async () => {
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const res = await API.get("/users/me");
+        setUser(res.data);
+      } catch (err) {
+        logout();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUser();
+  }, [token]);
+
 
   return (
     <AuthContext.Provider
