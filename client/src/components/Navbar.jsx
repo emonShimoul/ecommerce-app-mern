@@ -84,34 +84,77 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden px-4 pb-4 space-y-3 bg-white shadow">
-          <NavLink to="/" className={navLinkClass}>Home</NavLink>
-          <NavLink to="/products" className={navLinkClass}>Products</NavLink>
-          <NavLink to="/categories" className={navLinkClass}>Categories</NavLink>
-          <NavLink to="/contact" className={navLinkClass}>Contact</NavLink>
+        <div className="md:hidden border-t bg-white px-4 py-4 shadow-lg">
+          <div className="flex flex-col gap-2">
 
-          <div className="flex flex-col gap-2 pt-2">
-            {token ? (
-              <button onClick={handleLogout} className="px-4 py-1 border rounded-md">
-                Logout
-              </button>
-            ) : (
-              <>
-                <Link to="/login" className="px-4 py-1 border rounded-md text-center">
-                  Login
-                </Link>
-                <Link to="/register" className="px-4 py-1 border rounded-md text-center">
-                  Register
-                </Link>
-              </>
-            )}
-
-            <Link
-              to="/cart"
-              className="px-4 py-1 bg-blue-600 text-white rounded-md text-center"
+            <NavLink
+              to="/"
+              className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
+              onClick={() => setMenuOpen(false)}
             >
-              Cart
-            </Link>
+              Home
+            </NavLink>
+
+            <NavLink
+              to="/products"
+              className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
+              onClick={() => setMenuOpen(false)}
+            >
+              Products
+            </NavLink>
+
+            <NavLink
+              to="/categories"
+              className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
+              onClick={() => setMenuOpen(false)}
+            >
+              Categories
+            </NavLink>
+
+            <NavLink
+              to="/contact"
+              className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition"
+              onClick={() => setMenuOpen(false)}
+            >
+              Contact
+            </NavLink>
+
+            <div className="border-t pt-3 mt-2 flex flex-col gap-2">
+              {token ? (
+                <button
+                  onClick={handleLogout}
+                  className="w-full px-4 py-3 rounded-lg border text-left hover:bg-gray-50"
+                >
+                  Logout
+                </button>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="block px-4 py-3 rounded-lg border hover:bg-gray-50"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Login
+                  </Link>
+
+                  <Link
+                    to="/register"
+                    className="block px-4 py-3 rounded-lg border hover:bg-gray-50"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Register
+                  </Link>
+                </>
+              )}
+
+              <Link
+                to="/cart"
+                className="block px-4 py-3 rounded-lg bg-blue-600 text-white text-center"
+                onClick={() => setMenuOpen(false)}
+              >
+                Cart ({cartItems.length})
+              </Link>
+            </div>
           </div>
         </div>
       )}

@@ -1,6 +1,5 @@
 
 import { Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
 import { useCart } from "../hooks/useCart";
 
 const Cart = () => {
