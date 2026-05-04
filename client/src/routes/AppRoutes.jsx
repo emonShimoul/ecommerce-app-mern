@@ -9,6 +9,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 
 import PrivateRoute from "../components/PrivateRoute";
+import PublicRoute from "../components/PublicRoute";
 
 const AppRoutes = () => {
   return (
@@ -27,8 +28,16 @@ const AppRoutes = () => {
           }
         />
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        } />
+        <Route path="/register" element={
+          <PublicRoute>
+            <Register />
+          </PublicRoute>
+        } />
       </Routes>
     </Layout>
   );
