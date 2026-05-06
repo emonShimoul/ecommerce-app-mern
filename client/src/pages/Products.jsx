@@ -33,8 +33,7 @@ const Products = () => {
 
       <div className="max-w-7xl mx-auto px-4 py-10">
 
-        {/* Header */}
-        <h1 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-8">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-800 mb-8">
           Explore Products
         </h1>
 
@@ -43,7 +42,7 @@ const Products = () => {
           <input
             type="text"
             placeholder="Search products..."
-            className="w-full md:w-1/3 px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full md:w-1/3 max-w-md px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             value={search}
             onChange={(e) => {
               setPage(1);
@@ -63,7 +62,7 @@ const Products = () => {
         <div className="flex justify-center items-center gap-4 mt-10">
           <button
             onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-            className="px-4 py-2 bg-gray-200 rounded-lg"
+            className="px-4 py-2.5 bg-gray-200 rounded-lg"
           >
             Prev
           </button>
@@ -72,7 +71,7 @@ const Products = () => {
 
           <button
             onClick={() => setPage((prev) => prev + 1)}
-            className="px-4 py-2 bg-gray-200 rounded-lg"
+            className="px-4 py-2.5 bg-gray-200 rounded-lg"
           >
             Next
           </button>

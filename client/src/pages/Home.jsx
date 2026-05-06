@@ -51,8 +51,8 @@ const Home = () => {
       </div>
 
       {/* CTA */}
-      <section className="bg-indigo-600 text-white py-16 text-center">
-        <h2 className="text-3xl md:text-4xl font-semibold mb-4">
+      <section className="bg-indigo-600 text-white py-16 text-center px-4">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-4">
           Explore More Products
         </h2>
         <p className="mb-6 text-gray-200">

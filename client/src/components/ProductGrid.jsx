@@ -8,7 +8,7 @@ const ProductGrid = ({ products = [], title, link }) => {
       {/* Header */}
       {title && (
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-semibold text-gray-800">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-800">
             {title}
           </h2>
 
@@ -29,7 +29,7 @@ const ProductGrid = ({ products = [], title, link }) => {
           No products found
         </p>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {products.map((p) => (
             <ProductCard key={p._id} product={p} />
           ))}

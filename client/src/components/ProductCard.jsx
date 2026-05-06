@@ -7,14 +7,13 @@ const ProductCard = ({ product }) => {
       className="bg-white rounded-2xl shadow-sm hover:shadow-md transition duration-300 overflow-hidden group"
     >
       {/* Image */}
-      <div className="h-48 bg-gray-100 overflow-hidden relative">
+      <div className="h-44 sm:h-48 md:h-52 bg-gray-100 overflow-hidden relative">
         <img
           src={product.images?.[0]?.url}
           alt={product.title}
           className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
         />
 
-        {/* Discount Badge */}
         {product.discountPrice && (
           <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
             SALE
