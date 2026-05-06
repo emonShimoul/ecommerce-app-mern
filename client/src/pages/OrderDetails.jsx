@@ -11,7 +11,6 @@ const OrderDetails = () => {
       const res = await API.get(`/orders/${id}`);
       setOrder(res.data);
     };
-
     fetchOrder();
   }, [id]);
 
@@ -20,42 +19,43 @@ const OrderDetails = () => {
     window.location.reload();
   };
 
-
-  if (!order) return <p className="p-10">Loading...</p>;
+  if (!order) return <p className="text-center py-20">Loading...</p>;
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="bg-gray-50 min-h-screen">
+      <div className="max-w-5xl mx-auto px-4 py-10">
 
-      <h2 className="text-2xl font-bold mb-4">
-        Order Details
-      </h2>
+        <h2 className="text-3xl font-semibold mb-6">Order Details</h2>
 
-      <p className="mb-4 text-gray-500">
-        Status: {order.status}
-      </p>
+        <p className="mb-6 text-gray-500">
+          Status: <span className="font-medium text-gray-800">{order.status}</span>
+        </p>
 
-      <div className="space-y-3">
-        {order.orderItems.map((item) => (
-          <div key={item._id} className="flex justify-between border-b pb-2">
-            <span>{item.product.title}</span>
-            <span>{item.quantity} × ${item.product.price}</span>
+        <div className="bg-white rounded-2xl p-6 shadow-sm">
+          {order.orderItems.map((item) => (
+            <div key={item._id} className="flex justify-between border-b py-3">
+              <span>{item.product.title}</span>
+              <span>{item.quantity} × ${item.product.price}</span>
+            </div>
+          ))}
+
+          <div className="text-right mt-6">
+            <h3 className="text-xl font-semibold text-indigo-600">
+              Total: ${order.totalPrice}
+            </h3>
           </div>
-        ))}
-      </div>
+        </div>
 
-      <h3 className="text-xl font-bold mt-6">
-        Total: ${order.totalPrice}
-      </h3>
-
-      {order.status === "Pending" && (
-        <button
+        {order.status === "Pending" && (
+          <button
             onClick={cancelOrder}
-            className="mt-4 px-4 py-2 bg-red-600 text-white rounded"
-        >
+            className="mt-6 px-6 py-3 bg-red-500 text-white rounded-xl hover:bg-red-600 transition"
+          >
             Cancel Order
-        </button>
+          </button>
         )}
 
+      </div>
     </div>
   );
 };

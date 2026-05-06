@@ -61,45 +61,45 @@ const Checkout = () => {
       <div className="max-w-6xl mx-auto px-4 py-10 grid md:grid-cols-2 gap-10">
 
         {/* FORM */}
-        <div className="bg-white p-6 rounded shadow">
+        <div className="bg-white p-6 rounded-2xl shadow-sm">
           <h2 className="text-xl font-bold mb-4">Shipping Details</h2>
 
           <input
             name="name"
             placeholder="Full Name"
             onChange={handleChange}
-            className="w-full mb-3 border p-2 rounded"
+            className="w-full mb-3 border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
 
           <input
             name="address"
             placeholder="Address"
             onChange={handleChange}
-            className="w-full mb-3 border p-2 rounded"
+            className="w-full mb-3 border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
 
           <input
             name="phone"
             placeholder="Phone"
             onChange={handleChange}
-            className="w-full mb-3 border p-2 rounded"
+            className="w-full mb-3 border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
 
           <button
             onClick={handleOrder}
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+            className="w-full bg-indigo-600 text-white py-3 rounded-xl hover:bg-indigo-700 transition"
           >
             {loading ? "Placing..." : "Place Order"}
           </button>
         </div>
 
         {/* SUMMARY */}
-        <div className="bg-white p-6 rounded shadow">
+        <div className="bg-white p-6 rounded-2xl shadow-sm">
           <h2 className="text-xl font-bold mb-4">Order Summary</h2>
 
           {cartItems.map((item) => (
-            <div key={item._id} className="flex justify-between mb-2">
+            <div key={item._id} className="flex justify-between mb-2 text-gray-700">
               <span>{item.title} x {item.qty}</span>
               <span>${item.price * item.qty}</span>
             </div>
@@ -107,7 +107,7 @@ const Checkout = () => {
 
           <hr className="my-4" />
 
-          <h3 className="text-lg font-bold">
+          <h3 className="text-lg font-semibold text-indigo-600">
             Total: ${total.toFixed(2)}
           </h3>
         </div>

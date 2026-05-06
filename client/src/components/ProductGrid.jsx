@@ -8,7 +8,7 @@ const ProductGrid = ({ products = [], title, link }) => {
       {/* Header */}
       {title && (
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-800">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-800 text-center">
             {title}
           </h2>
 

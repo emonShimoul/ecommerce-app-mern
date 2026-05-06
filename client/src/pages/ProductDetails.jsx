@@ -47,108 +47,123 @@ const ProductDetails = () => {
 
     return (
         <div className="bg-gray-50 min-h-screen">
+            <div className="max-w-7xl mx-auto px-8 py-10 grid md:grid-cols-2 gap-10">
 
-        <div className="max-w-7xl mx-auto px-10 py-10 grid md:grid-cols-2 gap-8">
+                {/* LEFT SIDE (KEEP YOUR ZOOM LOGIC) */}
+                <div>
 
-            <div>
-                {/* Main Image */}
-                <div
-                    className="relative w-full max-w-md h-[400px] overflow-hidden rounded-xl"
-                    onMouseMove={(e) => {
+                    <div
+                        className="relative w-full max-w-md h-[400px] overflow-hidden rounded-2xl shadow-sm"
+                        onMouseMove={(e) => {
                         const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
-
                         const x = ((e.clientX - left) / width) * 100;
                         const y = ((e.clientY - top) / height) * 100;
 
                         setZoomStyle({
-                        backgroundPosition: `${x}% ${y}%`,
+                            backgroundPosition: `${x}% ${y}%`,
                         });
-                    }}
-                    onMouseEnter={() => setIsZooming(true)}
-                    onMouseLeave={() => setIsZooming(false)}
+                        }}
+                        onMouseEnter={() => setIsZooming(true)}
+                        onMouseLeave={() => setIsZooming(false)}
                     >
-                    {/* Background zoom layer */}
-                    <div
+                        {/* Zoom layer */}
+                        <div
                         className={`absolute inset-0 bg-no-repeat transition-opacity duration-200 ${
-                        isZooming ? "opacity-100" : "opacity-0"
+                            isZooming ? "opacity-100" : "opacity-0"
                         }`}
                         style={{
-                        backgroundImage: `url(${selectedImage})`,
-                        backgroundSize: "200%", // zoom level
-                        ...zoomStyle,
+                            backgroundImage: `url(${selectedImage})`,
+                            backgroundSize: "200%",
+                            ...zoomStyle,
                         }}
-                    />
+                        />
 
-                    {/* Normal image */}
-                    <img
+                        {/* Normal image */}
+                        <img
                         src={selectedImage}
                         alt=""
                         className="w-full h-full object-cover"
-                    />
-                </div>
+                        />
+                    </div>
 
-                {/* Thumbnails (only if multiple images exist) */}
-                {product.images?.length > 0 && (
-                    <div className="flex gap-3 mt-4">
+                    {/* Thumbnails */}
+                    <div className="flex gap-3 mt-4 flex-wrap">
                         {product.images.map((img, i) => (
-                            <img
+                        <img
                             key={i}
                             src={img.url}
-                            alt=""
                             onClick={() => setSelectedImage(img.url)}
-                            className={`w-20 h-20 object-cover rounded cursor-pointer border-2 ${
-                                selectedImage === img.url
-                                ? "border-blue-600"
+                            className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 ${
+                            selectedImage === img.url
+                                ? "border-indigo-600"
                                 : "border-transparent"
                             }`}
-                            />
+                        />
                         ))}
                     </div>
-                )}
-            </div>
 
-            {/* Details */}
-            <div>
-            <h1 className="text-3xl font-bold text-gray-800">
-                {product.title}
-            </h1>
+                </div>
 
-            <p className="text-blue-600 text-2xl font-semibold mt-4">
-                ${product.price}
-            </p>
+                {/* RIGHT SIDE */}
+                <div>
 
-            <p className={`mt-2 text-sm font-medium ${
-                product.stock > 0 ? "text-green-600" : "text-red-500"
+                <h1 className="text-3xl md:text-4xl font-semibold text-gray-800">
+                    {product.title}
+                </h1>
+
+                {/* Price */}
+                <div className="mt-4">
+                    {product.discountPrice ? (
+                    <>
+                        <span className="text-red-500 text-2xl font-semibold">
+                        ${product.discountPrice}
+                        </span>
+                        <span className="ml-3 line-through text-gray-400">
+                        ${product.price}
+                        </span>
+                    </>
+                    ) : (
+                    <span className="text-indigo-600 text-2xl font-semibold">
+                        ${product.price}
+                    </span>
+                    )}
+                </div>
+
+                {/* Stock */}
+                <p className={`mt-2 text-sm font-medium ${
+                    product.stock > 0 ? "text-green-600" : "text-red-500"
                 }`}>
-                {product.stock > 0 ? "In Stock" : "Out of Stock"}
-            </p>
+                    {product.stock > 0 ? "In Stock" : "Out of Stock"}
+                </p>
 
-            <p className="text-gray-600 mt-6 leading-relaxed">
-                {product.description}
-            </p>
+                {/* Description */}
+                <p className="text-gray-600 mt-6 leading-relaxed">
+                    {product.description}
+                </p>
 
-            {/* Quantity (basic) */}
-            <div className="mt-6">
-                <label className="mr-3 font-medium">Qty:</label>
-                <input
+                {/* Quantity */}
+                <div className="mt-6">
+                    <label className="mr-3 font-medium">Qty:</label>
+                    <input
                     type="number"
                     value={qty}
                     min={1}
                     onChange={(e) => setQty(e.target.value)}
-                    className="w-16 border px-2 py-1 rounded"
-                />
-            </div>
+                    className="w-20 border border-gray-300 px-2 py-1 rounded-lg"
+                    />
+                </div>
 
-            {/* Add to Cart */}
-            <button
-                onClick={() => addToCart(product, qty)}
-                className="mt-6 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                {/* Button */}
+                <button
+                    onClick={() => addToCart(product, qty)}
+                    className="mt-6 px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition"
                 >
-                Add to Cart
-            </button>
-            </div>
+                    Add to Cart
+                </button>
 
-        </div>
+                </div>
+
+            </div>
         </div>
     );
 };
