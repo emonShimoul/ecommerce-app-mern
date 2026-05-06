@@ -12,12 +12,14 @@ import PrivateRoute from "../components/PrivateRoute";
 import PublicRoute from "../components/PublicRoute";
 import Orders from "../pages/Orders";
 import OrderDetails from "../pages/OrderDetails";
+import Products from "../pages/Products";
 
 const AppRoutes = () => {
   return (
     <Layout>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/products" element={<Products/>} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
 
