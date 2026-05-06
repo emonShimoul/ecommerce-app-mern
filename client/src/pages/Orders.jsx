@@ -20,6 +20,23 @@ const Orders = () => {
     fetchOrders();
   }, []);
 
+  const getStatusColor = (status) => {
+    switch (status) {
+        case "Pending":
+        return "bg-yellow-100 text-yellow-700";
+        case "Processing":
+        return "bg-blue-100 text-blue-700";
+        case "Shipped":
+        return "bg-indigo-100 text-indigo-700";
+        case "Delivered":
+        return "bg-green-100 text-green-700";
+        case "Cancelled":
+        return "bg-red-100 text-red-700";
+        default:
+        return "bg-gray-100 text-gray-700";
+    }
+  };
+
   if (loading) {
     return (
       <div className="text-center py-10 text-gray-500">
@@ -51,6 +68,11 @@ const Orders = () => {
               <p className="text-sm text-gray-500">
                 Order ID: {order._id.slice(-6)}
               </p>
+              <span
+                className={`px-3 py-1 text-xs rounded-full ${getStatusColor(order.status)}`}
+              >
+                {order.status}
+              </span>
 
               <p className="text-sm text-gray-500">
                 {new Date(order.createdAt).toLocaleDateString()}
