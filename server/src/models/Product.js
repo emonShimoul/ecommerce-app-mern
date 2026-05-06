@@ -12,6 +12,13 @@ const productSchema = new mongoose.Schema(
       },
     ],
     stock: Number,
+    featured: {
+      type: Boolean,
+      default: false,
+    },
+    discountPrice: {
+      type: Number,
+    },
   },
   { timestamps: true }
 );

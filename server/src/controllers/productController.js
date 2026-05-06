@@ -6,7 +6,7 @@ const { successResponse, errorResponse } = require("../utils/response");
 // CREATE PRODUCT
 exports.createProduct = async (req, res) => {
   try {
-    const { title, price, description, stock } = req.body;
+    const { title, price, description, stock, featured, discountPrice } = req.body;
 
     if (!title || !price || !stock) {
       return errorResponse(res, "Required fields missing", 400);
@@ -34,6 +34,8 @@ exports.createProduct = async (req, res) => {
       description,
       stock,
       images: uploadedImages,
+      featured: featured || false,
+      discountPrice: discountPrice || null,
     });
 
     return successResponse(res, product, "Product created");
@@ -43,12 +45,48 @@ exports.createProduct = async (req, res) => {
   }
 };
 
-// GET ALL PRODUCTS
+// GET ALL PRODUCTS (WITH FILTERS + SEARCH + PAGINATION)
 exports.getProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const { featured, discount, search, page = 1, limit = 12 } = req.query;
 
-    return successResponse(res, products);
+    const query = {};
+
+    // Featured filter
+    if (featured === "true") {
+      query.featured = true;
+    }
+
+    // Discount filter
+    if (discount === "true") {
+      query.discountPrice = { $exists: true };
+    }
+
+    // Search by title
+    if (search) {
+      query.title = {
+        $regex: search,
+        $options: "i",
+      };
+    }
+
+    // Pagination
+    const skip = (Number(page) - 1) * Number(limit);
+
+    const products = await Product.find(query)
+      .skip(skip)
+      .limit(Number(limit))
+      .sort({ createdAt: -1 });
+
+    const total = await Product.countDocuments(query);
+
+    return successResponse(res, {
+      products,
+      total,
+      page: Number(page),
+      pages: Math.ceil(total / limit),
+    });
+
   } catch (error) {
     return errorResponse(res, error.message);
   }
@@ -71,7 +109,7 @@ exports.getProductById = async (req, res) => {
 
 // UPDATE PRODUCT
 exports.updateProduct = async (req, res) => {
-  try {
+  try {    
     const product = await Product.findById(req.params.id);
 
     if (!product) {
@@ -79,12 +117,14 @@ exports.updateProduct = async (req, res) => {
     }
     console.log("BODY:", req.body);
     console.log("FILE:", req.file);
-    const { title, price, description, stock } = req.body || {};
+    const { title, price, description, stock, featured, discountPrice } = req.body || {};
 
     if (title !== undefined) product.title = title;
     if (price !== undefined) product.price = price;
     if (description !== undefined) product.description = description;
     if (stock !== undefined) product.stock = stock;
+    if (featured !== undefined) product.featured = featured;
+    if (discountPrice !== undefined) product.discountPrice = discountPrice;
     
     // 🔥 If new images uploaded
     if (req.files && req.files.length > 0) {

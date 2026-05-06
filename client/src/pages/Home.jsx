@@ -10,7 +10,7 @@ const Home = () => {
     const fetchProducts = async () => {
       try {
         const res = await API.get("/products");
-        setProducts(res.data.data);
+        setProducts(res.data.data.products);
       } catch (err) {
         console.log(err);
       }
