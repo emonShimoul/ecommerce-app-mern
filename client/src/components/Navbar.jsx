@@ -35,6 +35,14 @@ const Navbar = () => {
           <NavLink to="/products" className={navLinkClass}>Products</NavLink>
           <NavLink to="/categories" className={navLinkClass}>Categories</NavLink>
           <NavLink to="/contact" className={navLinkClass}>Contact</NavLink>
+          {token && (
+            <Link
+              to="/orders"
+              className="text-gray-600 hover:text-blue-600"
+            >
+              My Orders
+            </Link>
+          )}
         </div>
 
         {/* Right Side */}
