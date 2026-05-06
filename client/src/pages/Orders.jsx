@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
+import { Link } from "react-router-dom";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -59,64 +60,69 @@ const Orders = () => {
 
       <div className="space-y-6">
         {orders.map((order) => (
-          <div
-            key={order._id}
-            className="bg-white p-6 rounded-xl shadow"
-          >
-            {/* Order Info */}
-            <div className="flex justify-between items-center mb-4">
-              <p className="text-sm text-gray-500">
-                Order ID: {order._id.slice(-6)}
-              </p>
-              <span
-                className={`px-3 py-1 text-xs rounded-full ${getStatusColor(order.status)}`}
-              >
-                {order.status}
-              </span>
+            <Link to={`/orders/${order._id}`}>
+                <div className="bg-white p-6 rounded-xl shadow hover:shadow-md transition">
+                    <div
+                        key={order._id}
+                        className="bg-white p-6 rounded-xl shadow"
+                    >
+                        {/* Order Info */}
+                        <div className="flex justify-between items-center mb-4">
+                        <p className="text-sm text-gray-500">
+                            Order ID: {order._id.slice(-6)}
+                        </p>
+                        <span
+                            className={`px-3 py-1 text-xs rounded-full ${getStatusColor(order.status)}`}
+                        >
+                            {order.status}
+                        </span>
 
-              <p className="text-sm text-gray-500">
-                {new Date(order.createdAt).toLocaleDateString()}
-              </p>
-            </div>
+                        <p className="text-sm text-gray-500">
+                            {new Date(order.createdAt).toLocaleDateString()}
+                        </p>
+                        </div>
 
-            {/* Products */}
-            <div className="space-y-3">
-              {order.orderItems.map((item) => (
-                <div
-                  key={item._id}
-                  className="flex items-center justify-between border-b pb-2"
-                >
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={item.product?.images?.[0]?.url}
-                      alt=""
-                      className="w-14 h-14 object-cover rounded"
-                    />
+                        {/* Products */}
+                        <div className="space-y-3">
+                        {order.orderItems.map((item) => (
+                            <div
+                            key={item._id}
+                            className="flex items-center justify-between border-b pb-2"
+                            >
+                            <div className="flex items-center gap-3">
+                                <img
+                                src={item.product?.images?.[0]?.url}
+                                alt=""
+                                className="w-14 h-14 object-cover rounded"
+                                />
 
-                    <div>
-                      <p className="font-medium">
-                        {item.product?.title}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Qty: {item.quantity}
-                      </p>
+                                <div>
+                                <p className="font-medium">
+                                    {item.product?.title}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                    Qty: {item.quantity}
+                                </p>
+                                </div>
+                            </div>
+
+                            <p className="font-semibold text-gray-700">
+                                ${item.product?.price * item.quantity}
+                            </p>
+                            </div>
+                        ))}
+                        </div>
+
+                        {/* Total */}
+                        <div className="text-right mt-4">
+                        <p className="text-lg font-bold text-blue-600">
+                            Total: ${order.totalPrice}
+                        </p>
+                        </div>
                     </div>
-                  </div>
-
-                  <p className="font-semibold text-gray-700">
-                    ${item.product?.price * item.quantity}
-                  </p>
                 </div>
-              ))}
-            </div>
-
-            {/* Total */}
-            <div className="text-right mt-4">
-              <p className="text-lg font-bold text-blue-600">
-                Total: ${order.totalPrice}
-              </p>
-            </div>
-          </div>
+            </Link>
+          
         ))}
       </div>
     </div>

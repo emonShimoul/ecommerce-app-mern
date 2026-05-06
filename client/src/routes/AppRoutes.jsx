@@ -11,6 +11,7 @@ import Register from "../pages/Register";
 import PrivateRoute from "../components/PrivateRoute";
 import PublicRoute from "../components/PublicRoute";
 import Orders from "../pages/Orders";
+import OrderDetails from "../pages/OrderDetails";
 
 const AppRoutes = () => {
   return (
@@ -44,6 +45,14 @@ const AppRoutes = () => {
           element={
             <PrivateRoute>
               <Orders />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/orders/:id"
+          element={
+            <PrivateRoute>
+              <OrderDetails />
             </PrivateRoute>
           }
         />
