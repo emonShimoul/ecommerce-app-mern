@@ -3,10 +3,21 @@ const User = require("../models/User");
 
 exports.createOrder = async (req, res) => {
   try {
-    const { products, totalPrice, shippingInfo } = req.body;
+    const {
+      products,
+      totalPrice,
+      shippingInfo,
+      paymentMethod,
+    } = req.body;
 
     if (!products || products.length === 0) {
       return res.status(400).json({ message: "No products in order" });
+    }
+
+    if (!paymentMethod) {
+      return res.status(400).json({
+        message: "Payment method required",
+      });
     }
 
     const orderItems = products.map((item) => ({
@@ -14,11 +25,21 @@ exports.createOrder = async (req, res) => {
       quantity: item.qty,
     }));
 
+    // DEFAULT PAYMENT STATUS
+    let paymentStatus = "pending";
+
+    // COD stays pending
+    if (paymentMethod === "cod") {
+      paymentStatus = "pending";
+    }
+
     const order = await Order.create({
       user: req.user._id,
       orderItems,
       totalPrice,
-      shippingInfo, // optional (add to model if needed)
+      shippingInfo,
+      paymentMethod,
+      paymentStatus,
     });
 
     res.json(order);

@@ -21,10 +21,31 @@ const orderSchema = new mongoose.Schema(
       address: String,
       phone: String,
     },
+    // ORDER STATUS
     status: {
       type: String,
       enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
       default: "Pending",
+    },
+
+    // PAYMENT METHOD
+    paymentMethod: {
+      type: String,
+      enum: ["cod", "stripe", "bkash"],
+      required: true,
+    },
+
+    // PAYMENT STATUS
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid", "failed"],
+      default: "pending",
+    },
+
+    // EXTRA PAYMENT INFO
+    paymentInfo: {
+      transactionId: String,
+      stripeSessionId: String,
     },
   },
   { timestamps: true }

@@ -17,6 +17,8 @@ const Checkout = () => {
     0
   );
 
+  const [paymentMethod, setPaymentMethod] = useState("cod");
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -37,6 +39,7 @@ const Checkout = () => {
         })),
         totalPrice: total,
         shippingInfo: form,
+        paymentMethod
       };
 
       await API.post("/orders", orderData);
@@ -84,6 +87,41 @@ const Checkout = () => {
             onChange={handleChange}
             className="w-full mb-3 border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
+
+          <div className="my-6">
+            <h3 className="font-semibold mb-3">
+              Payment Method
+            </h3>
+            <div className="space-y-3">
+              <label className="flex items-center gap-2 border p-3 rounded-lg cursor-pointer">
+                <input
+                  type="radio"
+                  value="cod"
+                  checked={paymentMethod === "cod"}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                />
+                Cash on Delivery
+              </label>
+              <label className="flex items-center gap-2 border p-3 rounded-lg cursor-pointer">
+                <input
+                  type="radio"
+                  value="stripe"
+                  checked={paymentMethod === "stripe"}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                />
+                Stripe
+              </label>
+              <label className="flex items-center gap-2 border p-3 rounded-lg cursor-pointer">
+                <input
+                  type="radio"
+                  value="bkash"
+                  checked={paymentMethod === "bkash"}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                />
+                bKash
+              </label>
+            </div>
+          </div>
 
           <button
             onClick={handleOrder}
