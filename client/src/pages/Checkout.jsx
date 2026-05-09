@@ -57,8 +57,15 @@ const Checkout = () => {
       // STRIPE
       // =========================
       if (paymentMethod === "stripe") {
-        alert("Stripe integration coming next");
-        return;
+        const res = await API.post(
+          "/payments/create-stripe-session",
+          {
+            products: cartItems,
+          }
+        );
+
+        // REDIRECT TO STRIPE
+        window.location.href = res.data.url;
       }
 
       // =========================
