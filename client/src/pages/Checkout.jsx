@@ -57,6 +57,24 @@ const Checkout = () => {
       // STRIPE
       // =========================
       if (paymentMethod === "stripe") {
+        // SAVE ORDER DATA TEMPORARILY
+        localStorage.setItem(
+          "pendingOrder",
+          JSON.stringify({
+            products: cartItems.map((item) => ({
+              productId: item._id,
+              qty: item.qty,
+            })),
+
+            totalPrice: total,
+
+            shippingInfo: form,
+
+            paymentMethod: "stripe",
+          })
+        );
+
+        // CREATE STRIPE SESSION
         const res = await API.post(
           "/payments/create-stripe-session",
           {
@@ -64,8 +82,10 @@ const Checkout = () => {
           }
         );
 
-        // REDIRECT TO STRIPE
+        // REDIRECT
         window.location.href = res.data.url;
+
+        return;
       }
 
       // =========================

@@ -13,6 +13,7 @@ import PublicRoute from "../components/PublicRoute";
 import Orders from "../pages/Orders";
 import OrderDetails from "../pages/OrderDetails";
 import Products from "../pages/Products";
+import PaymentSuccess from "../pages/PaymentSuccess";
 
 const AppRoutes = () => {
   return (
@@ -58,6 +59,14 @@ const AppRoutes = () => {
             </PrivateRoute>
           }
         />
+        <Route
+        path="/payment-success"
+        element={
+          <PrivateRoute>
+            <PaymentSuccess />
+          </PrivateRoute>
+        }
+      />
       </Routes>
     </Layout>
   );
