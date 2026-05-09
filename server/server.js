@@ -31,6 +31,7 @@ app.get("/api/protected", protect, (req, res) => {
   });
 });
 
+
 // test route
 app.get("/", (req, res) => {
   res.send("Server is running 🚀");
