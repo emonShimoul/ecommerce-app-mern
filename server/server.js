@@ -10,6 +10,7 @@ const connectDB = require("./src/config/db");
 const protect = require("./src/middleware/authMiddleware");
 const cartRoutes = require("./src/routes/cartRoutes");
 const orderRoutes = require("./src/routes/orderRoutes");
+const paymentRoutes = require("./src/routes/paymentRoutes");
 
 
 connectDB();
@@ -23,6 +24,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/payments", paymentRoutes);
 
 app.get("/api/protected", protect, (req, res) => {
   res.json({
