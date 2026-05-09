@@ -42,13 +42,32 @@ const Checkout = () => {
         paymentMethod
       };
 
-      await API.post("/orders", orderData);
+      // =========================
+      // CASH ON DELIVERY
+      // =========================
+      if (paymentMethod === "cod") {
+        await API.post("/orders", orderData);
+        alert("Order placed successfully!");
+        clearCart();
+        navigate("/orders");
+        return;
+      }
 
-      alert("Order placed successfully!");
+      // =========================
+      // STRIPE
+      // =========================
+      if (paymentMethod === "stripe") {
+        alert("Stripe integration coming next");
+        return;
+      }
 
-      // clear cart
-      clearCart();
-      navigate("/");
+      // =========================
+      // BKASH
+      // =========================
+      if (paymentMethod === "bkash") {
+        alert("bKash integration coming later");
+        return;
+      }
 
     } catch (err) {
       console.log(err);
