@@ -14,6 +14,8 @@ import Orders from "../pages/Orders";
 import OrderDetails from "../pages/OrderDetails";
 import Products from "../pages/Products";
 import PaymentSuccess from "../pages/PaymentSuccess";
+import AdminRoute from "./AdminRoute";
+import Dashboard from "../pages/admin/Dashboard";
 
 const AppRoutes = () => {
   return (
@@ -65,6 +67,14 @@ const AppRoutes = () => {
           <PrivateRoute>
             <PaymentSuccess />
           </PrivateRoute>
+        }
+      />
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <Dashboard />
+          </AdminRoute>
         }
       />
       </Routes>
