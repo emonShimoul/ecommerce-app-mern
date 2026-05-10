@@ -28,9 +28,9 @@ exports.createOrder = async (req, res) => {
     // DEFAULT PAYMENT STATUS
     let paymentStatus = "pending";
 
-    // COD stays pending
-    if (paymentMethod === "cod") {
-      paymentStatus = "pending";
+    // Stripe payment already completed
+    if (paymentMethod === "stripe") {
+      paymentStatus = "paid";
     }
 
     const order = await Order.create({
@@ -110,6 +110,45 @@ exports.getAllOrders = async (req, res) => {
     res.json({
       success: true,
       orders,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+exports.updateOrderStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    order.status = status;
+
+    // OPTIONAL:
+    // when delivered → payment completed for COD
+    if (
+      status === "Delivered" &&
+      order.paymentMethod === "cod"
+    ) {
+      order.paymentStatus = "paid";
+    }
+
+    await order.save();
+
+    res.json({
+      success: true,
+      message: "Order status updated",
+      order,
     });
   } catch (error) {
     res.status(500).json({
