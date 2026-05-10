@@ -2,7 +2,6 @@ const stripe = require("../config/stripe");
 
 exports.createStripeSession = async (req, res) => {
   try {
-
     const { products } = req.body;
 
     if (!products || products.length === 0) {
@@ -28,15 +27,10 @@ exports.createStripeSession = async (req, res) => {
 
     // CREATE STRIPE SESSION
     const session = await stripe.checkout.sessions.create({
-
       payment_method_types: ["card"],
-
       line_items,
-
       mode: "payment",
-
       success_url: "http://localhost:5173/payment-success",
-
       cancel_url: "http://localhost:5173/checkout",
     });
 

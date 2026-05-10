@@ -67,9 +67,7 @@ const Checkout = () => {
             })),
 
             totalPrice: total,
-
             shippingInfo: form,
-
             paymentMethod: "stripe",
           })
         );
