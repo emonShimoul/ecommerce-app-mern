@@ -16,6 +16,7 @@ import Products from "../pages/Products";
 import PaymentSuccess from "../pages/PaymentSuccess";
 import AdminRoute from "./AdminRoute";
 import Dashboard from "../pages/admin/Dashboard";
+import AdminLayout from "../components/admin/AdminLayout";
 
 const AppRoutes = () => {
   return (
@@ -62,21 +63,31 @@ const AppRoutes = () => {
           }
         />
         <Route
-        path="/payment-success"
-        element={
-          <PrivateRoute>
-            <PaymentSuccess />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/admin"
-        element={
-          <AdminRoute>
-            <Dashboard />
-          </AdminRoute>
-        }
-      />
+          path="/payment-success"
+          element={
+            <PrivateRoute>
+              <PaymentSuccess />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route
+            path="orders"
+            element={<Orders />}
+          />
+          <Route
+            path="products"
+            element={<Products />}
+          />
+        </Route>
       </Routes>
     </Layout>
   );

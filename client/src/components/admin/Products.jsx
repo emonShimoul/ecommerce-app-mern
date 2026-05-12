@@ -1,11 +1,11 @@
-const Dashboard = () => {
+const Products = () => {
   return (
     <div>
       <h1 className="text-3xl font-bold">
-        Admin Dashboard
+        Products Management
       </h1>
     </div>
   );
 };
 
-export default Dashboard;
+export default Products;
