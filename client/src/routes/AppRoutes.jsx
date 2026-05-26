@@ -17,6 +17,7 @@ import PaymentSuccess from "../pages/PaymentSuccess";
 import AdminRoute from "./AdminRoute";
 import Dashboard from "../pages/admin/Dashboard";
 import AdminLayout from "../components/admin/AdminLayout";
+import AdminOrders from "../pages/admin/AdminOrders";
 
 const AppRoutes = () => {
   return (
@@ -81,7 +82,7 @@ const AppRoutes = () => {
           <Route index element={<Dashboard />} />
           <Route
             path="orders"
-            element={<Orders />}
+            element={<AdminOrders />}
           />
           <Route
             path="products"

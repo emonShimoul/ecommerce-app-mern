@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import { Link } from "react-router-dom";
+import { getStatusColor } from "../utils/orderUtils";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -20,16 +21,16 @@ const Orders = () => {
     fetchOrders();
   }, []);
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Pending": return "bg-yellow-100 text-yellow-700";
-      case "Processing": return "bg-blue-100 text-blue-700";
-      case "Shipped": return "bg-indigo-100 text-indigo-700";
-      case "Delivered": return "bg-green-100 text-green-700";
-      case "Cancelled": return "bg-red-100 text-red-700";
-      default: return "bg-gray-100 text-gray-700";
-    }
-  };
+  // const getStatusColor = (status) => {
+  //   switch (status) {
+  //     case "Pending": return "bg-yellow-100 text-yellow-700";
+  //     case "Processing": return "bg-blue-100 text-blue-700";
+  //     case "Shipped": return "bg-indigo-100 text-indigo-700";
+  //     case "Delivered": return "bg-green-100 text-green-700";
+  //     case "Cancelled": return "bg-red-100 text-red-700";
+  //     default: return "bg-gray-100 text-gray-700";
+  //   }
+  // };
 
   if (loading) return <p className="text-center py-20">Loading...</p>;
   if (!orders.length) return <p className="text-center py-20">No orders yet.</p>;
