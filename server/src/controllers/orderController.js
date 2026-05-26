@@ -1,5 +1,6 @@
 const Order = require("../models/Order");
 const User = require("../models/User");
+const Product = require("../models/Product");
 
 exports.createOrder = async (req, res) => {
   try {
@@ -104,7 +105,10 @@ exports.getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find()
       .populate("user", "name email")
-      .populate("orderItems.product")
+      .populate(
+        "orderItems.product",
+        "title price images"
+      )
       .sort({ createdAt: -1 });
 
     res.json({
@@ -123,6 +127,23 @@ exports.updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;
 
+    // VALID STATUSES
+    const allowedStatuses = [
+      "Pending",
+      "Processing",
+      "Shipped",
+      "Delivered",
+      "Cancelled",
+    ];
+
+    // CHECK INVALID STATUS
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid status",
+      });
+    }
+
     const order = await Order.findById(req.params.id);
 
     if (!order) {
@@ -132,6 +153,7 @@ exports.updateOrderStatus = async (req, res) => {
       });
     }
 
+    // UPDATE STATUS
     order.status = status;
 
     // OPTIONAL:
@@ -150,6 +172,75 @@ exports.updateOrderStatus = async (req, res) => {
       message: "Order status updated",
       order,
     });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+exports.getAdminOrderById = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id)
+      .populate("user", "name email")
+      .populate(
+        "orderItems.product",
+        "title price images"
+      );
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      order,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+exports.getAdminStats = async (req, res) => {
+  try {
+
+    // TOTAL ORDERS
+    const totalOrders = await Order.countDocuments();
+
+    // TOTAL USERS
+    const totalUsers = await User.countDocuments();
+
+    // TOTAL PRODUCTS
+    const totalProducts =
+      await Product.countDocuments();
+
+    // TOTAL SALES
+    const orders = await Order.find({
+      paymentStatus: "paid",
+    });
+
+    const totalSales = orders.reduce(
+      (acc, order) => acc + order.totalPrice,
+      0
+    );
+
+    res.json({
+      success: true,
+      stats: {
+        totalOrders,
+        totalUsers,
+        totalProducts,
+        totalSales,
+      },
+    });
+
   } catch (error) {
     res.status(500).json({
       success: false,
